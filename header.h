@@ -47,9 +47,15 @@ void liberer_Regles(Regles *Liste);
 
 Regles* LireFichier(char *nomFichier);
 
-int detecteLettre(const char *chaine, char lettre);
 
-void parcourirListe(Regles *liste, char lettre);
+
+
+
+int isLitteralFact(char *chaine, el* faits);
+
+int detecteFaits(el *regle, el **faits);
+
+void chainerAvant(Regles *listeRegles, el **baseFaits);
 
  
 
