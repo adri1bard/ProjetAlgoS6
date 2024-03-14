@@ -165,49 +165,76 @@ Regles* LireFichier(char *nomFichier) {
 
 
 
-
-
-
-int detecteLettre(const char *chaine, char lettre) {
-    char *token = malloc(strlen(chaine) + 1); // +1 pour le caractère de fin de chaîne
-    strcpy(token, chaine);
-    int i = 0;
-    while (token[i] != '\0') {
-
-        if (token[i] == lettre) {
-
-            free(token); // Libérer la mémoire allouée avant de retourner
-            return 1; // La lettre a été trouvée
+// Fonction pour détecter si un élément de la règle est un fait littéral
+//retourne 1 si la chaine est dans la base de faits
+int isLitteralFact(char *chaine, el* faits) {
+    el *temp = faits;
+    while (temp != NULL) {
+        if (strcmp(chaine, temp->chaine) == 0) {
+            return 1;
         }
-        i++;
+        temp = temp->suiv;
     }
-    free(token); // Libérer la mémoire allouée avant de retourner
     return 0;
 }
 
-// Fonction pour parcourir la liste chaînée et détecter la présence d'une lettre dans chaque chaîne
-void parcourirListe(Regles *liste, char lettre) {
-    Regles *courant = liste;
 
-    while (courant != NULL) {
-        el *temp = courant->premier;
-        while (temp != NULL) {
-            if (detecteLettre(temp->chaine, lettre)) {
-                printf("La lettre '%c' est presente dans la chaîne :", lettre);
-                afficher_liste(courant->premier);
-                printf("\n");
-
-            }
+//Detecte si les elements de la regle sont tous dans la base de faits
+//retourne 1 si tous les elements de la regle sont dans la base de faits
+//Ajoute l'element en tete de liste de la regle à la base de faits
+int detecteFaits(el *regle, el **faits) {
+    el *temp = regle; // Pointeur temporaire pour parcourir la règle
+    if (isLitteralFact(regle->chaine, *faits)) {
+        printf("La tête de liste est dans les faits\n");
+        return 0;
+    }
+    printf("La tête de liste n'est PAS dans les faits\n");
+    temp = temp->suiv; // Évite la tête de liste
+    // Parcours de la règle
+    while (temp != NULL) {
+        printf("temp->chaine : %s\n", temp->chaine);
+        // Vérification si l'élément de la règle est présent dans les faits
+        if (isLitteralFact(temp->chaine, *faits)) {
             temp = temp->suiv;
-            /* else {
-
-                //printf("La lettre '%c' n'est pas presente dans la chaîne :", lettre);
-                //afficher_liste(courant->premier);
-                //printf("\n");
-            }*/
+        } else {
+            return 0;
         }
+        // Passage à l'élément suivant de la règle
+    }
+
+    // Si tous les éléments de la règle sont trouvés dans les faits, la règle peut être appliquée
+    // Ajout de l'élément en tête de liste de la règle à la base de faits
+    printf("regle->chaine : %s\n", regle->chaine);
+    ajouter_element(faits, regle->chaine);
+
+    return 1; // Renvoie 1 pour indiquer que la règle peut être appliquée
+}
 
 
-        courant = courant->suiv;
+
+
+
+void chainerAvant(Regles *listeRegles, el **baseFaits) {
+    int reglesAppliquees = 1; // Indicateur pour savoir si des règles ont été appliquées dans une itération
+
+    // Tant qu'au moins une règle a été appliquée dans une itération précédente
+    while (reglesAppliquees) {
+        reglesAppliquees = 0; // Réinitialise l'indicateur à chaque itération
+        Regles *regleCourante = listeRegles;
+
+        // Parcours de toutes les règles
+        while (regleCourante != NULL) {
+            // Si tous les éléments de la règle sont dans la base de faits, la conclusion peut etre ajoutée aux faits
+            if (detecteFaits(regleCourante->premier, baseFaits)) {
+                // Ajout de la tête de la conclusion à la base de faits
+                ajouter_element(baseFaits, regleCourante->premier->chaine);
+                reglesAppliquees = 1; // Indique qu'au moins une règle a été appliquée
+            }
+            regleCourante = regleCourante->suiv;
+        }
     }
 }
+
+
+
+
