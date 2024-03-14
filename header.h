@@ -51,8 +51,13 @@ Regles* LireFichier(char *nomFichier);
 
 
 
+// Fonction pour détecter si un élément de la règle est un fait littéral
+//retourne 1 si la chaine est dans la base de faits
 int isLitteralFact(char *chaine, el* faits);
 
+//Detecte si les elements de la regle sont tous dans la base de faits
+//retourne 1 si tous les elements de la regle sont dans la base de faits
+//Ajoute l'element en tete de liste de la regle à la base de faits
 int detecteFaits(el *regle, el **faits);
 
 void chainerAvant(Regles *listeRegles, el **baseFaits);
