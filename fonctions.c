@@ -32,7 +32,20 @@ void enlever_point(char *chaine) {
 
 
 // Fonction pour ajouter un élément à la liste
+
+// Fonction pour ajouter un élément à la liste
 void ajouter_element(el **liste, char *chaine) {
+    // Vérification si l'élément est déjà présent dans la liste
+    el *courant = *liste;
+    while (courant != NULL) {
+        if (strcmp(courant->chaine, chaine) == 0) {
+            // L'élément est déjà présent, donc on ne l'ajoute pas de nouveau
+            return;
+        }
+        courant = courant->suiv;
+    }
+
+    // L'élément n'est pas déjà présent, on l'ajoute à la liste
     el *nouvel_element = (el*)malloc(sizeof(el));
     if (nouvel_element == NULL) {
         printf("Erreur d'allocation de mémoire pour nouvel_element.\n");
@@ -48,6 +61,7 @@ void ajouter_element(el **liste, char *chaine) {
 
     *liste = nouvel_element;
 }
+
 
 void afficher_liste(el *liste) {
     while (liste != NULL) {
@@ -92,7 +106,7 @@ void liberer_Regles(Regles *Liste) {
     }
 }
 Regles* LireFichier(char *nomFichier) {
-    FILE *fichier = fopen(NomDuFichier, "r");
+    FILE *fichier = fopen(nomFichier, "r");
     if (fichier == NULL) {
         printf("Impossible d'ouvrir le fichier.\n");
         exit(EXIT_FAILURE);
@@ -102,40 +116,20 @@ Regles* LireFichier(char *nomFichier) {
     char ligne[100];
 
     while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
-        el *listeElements = NULL;
-        char a[10], b[10], c[10], arrow[10], d[10];
+        // Traitement des flèches et des points
         enlever_fleches(ligne);
+        enlever_point(ligne);
+        ligne[strcspn(ligne, "\n")] = '\0';
 
+        el *listeElements = NULL;
 
-
-        // Utilisation de sscanf pour séparer la ligne en parties
-        if (sscanf(ligne, "%s %s %s %s", a, b, c, d) == 4) {
-            // Ignorer la partie "->"
-            // Maintenant, vous avez les parties de la ligne séparées
-            // Ajoutez-les à votre liste ou faites ce que vous devez faire avec elles
-            if(a[0]!='.'){
-
-                    ajouter_element(&listeElements, a);
-            }
-            if(b[0]!='.'){
-
-                    ajouter_element(&listeElements, b);
-            }
-            if(c[0]!='.'){
-
-                    ajouter_element(&listeElements, c);
-            }
-            if(d[0]!='.'){
-
-                    ajouter_element(&listeElements, d);
-            }
-
-        } else {
-            printf("Erreur de lecture de la ligne.\n");
-            // Gérer l'erreur ou passer à la prochaine itération selon vos besoins
-            continue;
+        char *token = strtok(ligne, " ");
+        while (token != NULL) {
+            ajouter_element(&listeElements, token);
+            token = strtok(NULL, " ");
         }
 
+        // Création d'une nouvelle règle
         Regles *nouvelle_regles = (Regles*)malloc(sizeof(Regles));
         if (nouvelle_regles == NULL) {
             printf("Erreur d'allocation de mémoire pour nouvelle_regles.\n");
@@ -146,6 +140,7 @@ Regles* LireFichier(char *nomFichier) {
         nouvelle_regles->premier = listeElements;
         nouvelle_regles->suiv = NULL;
 
+        // Ajout de la nouvelle règle à la liste
         if (Liste == NULL) {
             Liste = nouvelle_regles;
         } else {
@@ -161,7 +156,6 @@ Regles* LireFichier(char *nomFichier) {
 
     return Liste;
 }
-
 
 
 
@@ -234,7 +228,3 @@ void chainerAvant(Regles *listeRegles, el **baseFaits) {
         }
     }
 }
-
-
-
-
