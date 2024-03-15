@@ -28,10 +28,20 @@ void enlever_point(char *chaine) {
     chaine[j] = '\0'; // Ajoute le caractère de fin de chaîne
 }
 
+void enlever_pointvirgule(char *chaine) {
+    int longueur = strlen(chaine);
+    int j = 0;
 
+    for (int i = 0; i < longueur; i++) {
+        if (chaine[i] == ';') {
+            // Saute les caractères "->"
+            i ++;
+        }
+        chaine[j++] = chaine[i];
+    }
+    chaine[j] = '\0'; // Ajoute le caractère de fin de chaîne
+}
 
-
-// Fonction pour ajouter un élément à la liste
 
 // Fonction pour ajouter un élément à la liste
 void ajouter_element(el **liste, char *chaine) {
@@ -60,15 +70,6 @@ void ajouter_element(el **liste, char *chaine) {
     }
 
     *liste = nouvel_element;
-}
-
-
-void afficher_liste(el *liste) {
-    while (liste != NULL) {
-        printf("%s ", liste->chaine);
-        liste = liste->suiv;
-    }
-    printf("\n");
 }
 
 // Fonction pour afficher les règles
@@ -105,6 +106,7 @@ void liberer_Regles(Regles *Liste) {
         free(temp);
     }
 }
+
 Regles* LireFichier(char *nomFichier) {
     FILE *fichier = fopen(nomFichier, "r");
     if (fichier == NULL) {
@@ -119,6 +121,7 @@ Regles* LireFichier(char *nomFichier) {
         // Traitement des flèches et des points
         enlever_fleches(ligne);
         enlever_point(ligne);
+        enlever_pointvirgule(ligne);
         ligne[strcspn(ligne, "\n")] = '\0';
 
         el *listeElements = NULL;
@@ -156,6 +159,7 @@ Regles* LireFichier(char *nomFichier) {
 
     return Liste;
 }
+
 
 
 
@@ -228,3 +232,7 @@ void chainerAvant(Regles *listeRegles, el **baseFaits) {
         }
     }
 }
+
+
+
+
