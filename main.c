@@ -14,7 +14,7 @@ int main() {
     Regles *Faits= LireFichier("Faits.txt");
     el* faits=Faits->premier;
     chainerAvant(Liste, &faits);
-    printf("\n \nBase de faits apres chainerAvant :\n");
+    printf("\n \nBase de faits apres le chainage avant :\n");
     afficher_liste(faits);
     return EXIT_SUCCESS;
 }
