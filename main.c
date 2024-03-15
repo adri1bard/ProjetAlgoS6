@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "header.h"
+#include "fonctions.c"
+
 int main() {
 
     Regles *Liste= LireFichier("Prof.txt");
