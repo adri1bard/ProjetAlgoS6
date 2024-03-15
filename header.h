@@ -36,6 +36,8 @@ void enlever_fleches(char *chaine);
 
 void enlever_point(char *chaine);
 
+void enlever_pointvirgule(char *chaine);
+
 void ajouter_element(el **liste, char *chaine);
 
 void afficher_liste(el *liste);
@@ -62,6 +64,8 @@ int isLitteralFact(char *chaine, el* faits);
 int detecteFaits(el *regle, el **faits);
 
 void chainerAvant(Regles *listeRegles, el **baseFaits);
+
+int chainerArriere(char* But, Regles *listeRegles, el **baseFaits);
 
  
 

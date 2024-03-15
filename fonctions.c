@@ -71,7 +71,19 @@ void ajouter_element(el **liste, char *chaine) {
 
     *liste = nouvel_element;
 }
+void afficher_liste(el *liste) {
+    if (liste == NULL) {
+        printf("\n");
+        return;
+    }
 
+
+    while (liste != NULL) {
+        printf(" %s", liste->chaine);
+        liste = liste->suiv;
+    }
+    printf("\n");
+}
 // Fonction pour afficher les règles
 void afficher_Regles(Regles *Liste) {
     while (Liste != NULL) {

@@ -9,11 +9,10 @@ int main() {
 
     afficher_Regles(Liste);
     printf("_______________________________\n");
-    el *faits = NULL;
-    ajouter_element(&faits, "b");
+    Regles *Faits= LireFichier("Faits.txt");
+    el* faits=Faits->premier;
     chainerAvant(Liste, &faits);
     printf("\n \nBase de faits apres chainerAvant :\n");
     afficher_liste(faits);
-
     return EXIT_SUCCESS;
 }
